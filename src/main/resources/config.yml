@@ -1,0 +1,28 @@
+database:
+  username: root
+  password: abc123
+  host: localhost
+  port: 3306
+  connections:
+    minPoolSize: 2
+    maxPoolSize: 20
+
+
+server:
+  requestLog:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: console
+      target: stdout
+      timeZone: Europe/Berlin
+      logFormat: "%highlight(%-5level) %boldWhite([%date{yyyy-MM-dd HH:mm:ss}]) %cyan(%logger) %boldMagenta(-) %message%n%rEx"
+    - type: file
+      threshold: ALL
+      currentLogFilename: ./Configuration/logs/latest.log
+      archivedLogFilenamePattern: ./Configuration/logs/archived-%d{yyyy-MM-dd}.log.gz
+      archivedFileCount: 20
+      timeZone: Europe/Berlin
+      logFormat: "%-5level [%date{yyyy-MM-dd HH:mm:ss}] %logger - %message%n%rEx"
