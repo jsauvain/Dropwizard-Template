@@ -14,9 +14,9 @@ public class DatabaseBundle extends JooqBundle<DropwizardConfiguration> {
 	public PooledDataSourceFactory getDataSourceFactory(DropwizardConfiguration configuration) {
 		DatabaseConfiguration dbConfig = configuration.getDatabase();
 		DataSourceFactory dataSourceFactory = new DataSourceFactory();
-		dataSourceFactory.setUrl("jdbc:mariadb://" + dbConfig.getHost() + ":" + dbConfig.getPort());
+		dataSourceFactory.setUrl("jdbc:mariadb://" + dbConfig.getUrl());
 		dataSourceFactory.setUser(dbConfig.getUsername());
-		log.info("Connection to jdbc:mariadb://{}:{}. Authenticating as User {}.", dbConfig.getHost(), dbConfig.getPort(), dbConfig.getUsername());
+		log.info("Connection to jdbc:mariadb://{}. Authenticating as User {}.", dbConfig.getUrl(), dbConfig.getUsername());
 		dataSourceFactory.setPassword(dbConfig.getPassword());
 		dataSourceFactory.setDriverClass("org.mariadb.jdbc.Driver");
 		log.info("Driver is {}", dataSourceFactory.getDriverClass());

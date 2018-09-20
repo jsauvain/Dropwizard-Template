@@ -2,6 +2,7 @@ package ch.joel.dropwizard;
 
 import ch.joel.dropwizard.config.DropwizardConfiguration;
 import ch.joel.dropwizard.database.DatabaseBundle;
+import ch.joel.dropwizard.database.DatabaseMigration;
 import ch.joel.dropwizard.resource.DropwizardResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -28,7 +29,7 @@ public class DropwizardApplication extends Application<DropwizardConfiguration> 
 		File file = new File("Configuration/config.yml");
 		if (!file.exists()) {
 			try (InputStream is = DropwizardApplication.class.getResourceAsStream("/config.yml");
-				 OutputStream os = new FileOutputStream(file)) {
+			     OutputStream os = new FileOutputStream(file)) {
 				IOUtils.copy(is, os);
 			} catch (IOException ex) {
 				log.error("Could not load config", ex);
@@ -40,11 +41,13 @@ public class DropwizardApplication extends Application<DropwizardConfiguration> 
 
 	@Override
 	public void initialize(Bootstrap<DropwizardConfiguration> bootstrap) {
-		bootstrap.addBundle(new DatabaseBundle());
+		DatabaseBundle bundle = new DatabaseBundle();
+		bootstrap.addBundle(bundle);
+		bootstrap.addBundle(new DatabaseMigration<>(bundle));
 	}
 
 	public void run(DropwizardConfiguration configuration, Environment environment) {
-
+		environment.jersey().setUrlPattern("/api/*");
 		environment.jersey().register(new ServiceBinder(configuration));
 		environment.jersey().register(DropwizardResource.class);
 	}

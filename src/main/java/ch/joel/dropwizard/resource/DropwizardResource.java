@@ -29,10 +29,12 @@ public class DropwizardResource {
 
 	@GET
 	@Path("hello")
-	public Response helloWorld() {
+	public List<ExampleBean> helloWorld() {
 		log.info("Hello world requested =)");
 		List<Example> examples = repository.getExamples();
-		return Response.ok(examples.stream().map(example -> new ExampleBean(example.getFirstName(), example.getLastName())).collect(Collectors.toList())).build();
+		return examples.stream()
+				.map(example -> new ExampleBean(example.getFirstName(), example.getLastName()))
+				.collect(Collectors.toList());
 	}
 
 }
